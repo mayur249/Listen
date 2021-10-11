@@ -7,7 +7,7 @@ const App = () => {
     <div className="root">
       <div className="container">
         <LazyLoadImage
-          src={process.env.PUBLIC_URL + "/assets/playerImage.jpg"}
+          src={process.env.PUBLIC_URL + "/assets/playerImage1.jpg"}
           className="image"
         />
         <div className="song-info">
