@@ -11,7 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #152129;
+  background-color: #addcff;
 }
 
 .btn {
@@ -32,11 +32,12 @@ body {
 }
 
 .container {
-  background-color: #3e3c3f;
+  background-color: #061628;
   width: 400px;
   text-align: center;
   padding: 15px;
   border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
 .image-container {

@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
 import { NextButton, PlayPauseButton, PreviousButton } from "./components";
 import audios from "./static/audios";
 import Wave from "@foobar404/wave";
@@ -47,9 +45,7 @@ const App = () => {
     <div className="root">
       <div className="container">
         <div className="image-container">
-          <LazyLoadImage
-            effect="blur"
-            placeholderSrc={currentSong.placeholder}
+          <img
             src={currentSong.img}
             className={isPaused ? "image" : "image animation-spin"}
           />
