@@ -1,59 +1,90 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import { NextButton, PlayPauseButton, PreviousButton } from "./components";
+import audios from "./static/audios";
+import Wave from "@foobar404/wave";
 
 const App = () => {
+  const songRef = useRef(null);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(true);
+  const [hasChanged, setHasChanged] = useState(false);
+  const [songTime, setSongTime] = useState(0);
+  const [wave] = useState(new Wave());
+  const currentSong = audios[currentSongIndex];
+
+  useEffect(() => {
+    window.document
+      .getElementById("audio_element")
+      .addEventListener("loadedmetadata", (e) => {
+        console.log("event", e);
+        songRef.current = e.target;
+      });
+    wave.fromElement("audio_element", "canvas_element", {
+      type: "flower",
+      colors: ["#000", "#fff"],
+    });
+  }, [wave]);
+
+  const goToNextSong = (value) => {
+    const nextSongIndex = currentSongIndex + value;
+    const firstSongIndex = 0;
+    const lastSongIndex = audios.length - 1;
+    if (nextSongIndex >= audios.length) {
+      setCurrentSongIndex(firstSongIndex);
+    } else if (nextSongIndex < firstSongIndex) {
+      setCurrentSongIndex(lastSongIndex);
+    } else {
+      setCurrentSongIndex(nextSongIndex);
+    }
+    setHasChanged(true);
+    setIsPaused(false);
+  };
+
   return (
     <div className="root">
       <div className="container">
-        <LazyLoadImage
-          src={process.env.PUBLIC_URL + "/assets/playerImage1.jpg"}
-          className="image"
-        />
+        <div className="image-container">
+          <LazyLoadImage
+            effect="blur"
+            placeholderSrc={currentSong.placeholder}
+            src={currentSong.img}
+            className={isPaused ? "image" : "image animation-spin"}
+          />
+          <canvas width="350px" height="350px" id="canvas_element" />
+        </div>
+
         <div className="song-info">
-          <h1>Late Truth</h1>
-          <p>Random</p>
+          <h1>{currentSong.songName}</h1>
+          <p>{currentSong.singer}</p>
+          <audio
+            autoPlay={hasChanged}
+            onEnded={() => goToNextSong(1)}
+            src={currentSong.src}
+            id="audio_element"
+            onTimeUpdate={() => setSongTime(songRef.current?.currentTime)}
+          />
         </div>
         <div>
-          <input type="range" min="0" max="100" className="input-range" />
+          <input
+            value={songTime}
+            type="range"
+            min={0}
+            max={songRef.current?.duration}
+            className="input-range"
+            onChange={(e) => (songRef.current.currentTime = e.target.value)}
+          />
         </div>
         <div className="controller">
-          <svg
-            className="btn"
-            fill="#fff"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-          <svg
-            className="btn-play"
-            fill="#fff"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
-          <svg
-            className="btn"
-            fill="#fff"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-              clip-rule="evenodd"
-            ></path>
-          </svg>
+          <PreviousButton goToNextSong={goToNextSong} />
+          <PlayPauseButton
+            songRef={songRef}
+            isPaused={isPaused}
+            setIsPaused={setIsPaused}
+          />
+          <NextButton goToNextSong={goToNextSong} />
         </div>
       </div>
     </div>

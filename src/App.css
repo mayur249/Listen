@@ -24,12 +24,26 @@ body {
   width: 80px;
 }
 
+#canvas_element {
+  position: absolute;
+  top: 0;
+  left: 50;
+  border-radius: 100%;
+}
+
 .container {
   background-color: #3e3c3f;
   width: 400px;
   text-align: center;
   padding: 15px;
   border-radius: 20px;
+}
+
+.image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image {
@@ -76,7 +90,8 @@ body {
 }
 
 @media (max-width: 768px) {
-  .image {
+  .image,
+  #canvas_element {
     width: 250px;
     height: 250px;
   }
@@ -85,5 +100,21 @@ body {
   }
   .song-info h1 {
     font-size: 3rem;
+  }
+}
+
+.animation-spin {
+  animation-name: spin;
+  animation-timing-function: linear;
+  animation-duration: 60s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
