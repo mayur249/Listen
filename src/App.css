@@ -96,9 +96,6 @@ body {
     width: 250px;
     height: 250px;
   }
-  .container {
-    background: none;
-  }
   .song-info h1 {
     font-size: 3rem;
   }
